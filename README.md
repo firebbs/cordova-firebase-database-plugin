@@ -52,7 +52,6 @@ buildscript {
 ## Authentication
 ### signInWithFacebook (Android only)
 
-Choose whether data should be persisted on disk, i.e. between app relaunches
 ```
 window.FirebaseDatabasePlugin.signInWithFacebook(accessToken);
 ```
@@ -60,7 +59,6 @@ returns Promise
 
 ### signInWithEmailAndPassword
 
-Choose whether data should be persisted on disk, i.e. between app relaunches
 ```
 window.FirebaseDatabasePlugin.signInWithEmailAndPassword(email, password);
 ```
@@ -71,7 +69,7 @@ returns Promise
 
 ### getValue (Android only)
 
-At a particular reference, set the given value:
+Get value:
 ```
 window.FirebaseDatabasePlugin.getValue(path);
 ```
