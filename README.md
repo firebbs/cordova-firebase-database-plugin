@@ -8,11 +8,9 @@ Please file bugs in [Issues](https://github.com/hbmartin/cordova-plugin-firebase
 Ask for help in #cordova on the [Firebase Community Slack](https://firebase-community.appspot.com)
 
 ## Installation
-See npm package for versions - https://www.npmjs.com/package/cordova-plugin-firebase-realtime-database
-
 Install the by running:
 ```
-cordova plugin add cordova-plugin-firebase-realtime-database --save
+cordova plugin add https://github.com/firebbs/cordova-firebase-database-plugin --save
 ```
 Download your Firebase configuration files, GoogleService-Info.plist for iOS and google-services.json for Android, and place them in the root folder of your Cordova project:
 
@@ -51,8 +49,8 @@ buildscript {
 ````
 
 ## Methods
-## Athentication
-### signInWithFacebook
+## Authentication
+### signInWithFacebook (Android only)
 
 Choose whether data should be persisted on disk, i.e. between app relaunches
 ```
@@ -71,7 +69,7 @@ returns Promise
 
 ## Data access
 
-### getValue
+### getValue (Android only)
 
 At a particular reference, set the given value:
 ```
