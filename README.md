@@ -1,4 +1,4 @@
-# cordova-plugin-firebase-realtime-database
+# cordova-firebase-database-plugin
 Cordova plugin for Google Firebase Realtime Database
 Based on the the [Firebase Notification / FCM plugin](https://github.com/arnesson/cordova-plugin-firebase)
 
@@ -51,6 +51,33 @@ buildscript {
 ````
 
 ## Methods
+## Athentication
+### signInWithFacebook
+
+Choose whether data should be persisted on disk, i.e. between app relaunches
+```
+window.FirebaseDatabasePlugin.signInWithFacebook(accessToken);
+```
+returns Promise
+
+### signInWithEmailAndPassword
+
+Choose whether data should be persisted on disk, i.e. between app relaunches
+```
+window.FirebaseDatabasePlugin.signInWithEmailAndPassword(email, password);
+```
+returns Promise
+
+
+## Data access
+
+### getValue
+
+At a particular reference, set the given value:
+```
+window.FirebaseDatabasePlugin.getValue(path);
+```
+returns Promise
 
 ### ref
 
@@ -86,10 +113,4 @@ Choose whether data should be persisted on disk, i.e. between app relaunches
 window.FirebaseDatabasePlugin.setDatabasePersistent(true);
 ```
 
-### signInWithEmailAndPassword
 
-Choose whether data should be persisted on disk, i.e. between app relaunches
-```
-window.FirebaseDatabasePlugin.signInWithEmailAndPassword(email, password);
-```
-returns Promise
