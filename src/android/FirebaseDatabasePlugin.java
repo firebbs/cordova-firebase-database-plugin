@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +27,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 import org.apache.cordova.CallbackContext;
 
 import org.json.JSONArray;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,6 +75,9 @@ public class FirebaseDatabasePlugin extends CordovaPlugin {
         } else if (action.equals("setValueString")) {
             this.setValue(callbackContext, args.getString(0), args.getString(1));
             return true;
+        } else if (action.equals("getValue")) {
+            this.getValue(callbackContext, args.getString(0));
+            return true;
         } else if (action.equals("setValue")) {
             this.setValue(callbackContext, args.getString(0), args.getJSONObject(1));
             return true;
@@ -79,6 +86,9 @@ public class FirebaseDatabasePlugin extends CordovaPlugin {
             return true;
         } else if (action.equals("signInWithEmailAndPassword")) {
             this.signInWithEmailAndPassword(callbackContext, args.getString(0), args.getString(1));
+            return true;
+        } else if (action.equals("signInWithFacebook")) {
+            this.signInWithFacebook(callbackContext, args.getString(0));
             return true;
         }
         return false;
@@ -100,6 +110,34 @@ public class FirebaseDatabasePlugin extends CordovaPlugin {
         });
     }
 
+    private void getValue(final CallbackContext callbackContext, final String path) throws JSONException {
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Object value = dataSnapshot.getValue(false);
+
+                        Gson gson = new Gson();
+                        String jsonValue = gson.toJson(value);
+                        callbackContext.success(jsonValue);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        //System.out.println("The read failed: " + databaseError.getCode());
+                        callbackContext.error("The read failed: " + databaseError.getCode());
+
+                    }
+                });
+               
+              
+            }
+        });
+    }
+    
     private void setValue(final CallbackContext callbackContext, final String path, final JSONObject updates) {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
@@ -162,7 +200,33 @@ public class FirebaseDatabasePlugin extends CordovaPlugin {
             }
         });
     }
-
+    private void signInWithFacebook(final CallbackContext callbackContext, final String token)  {
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                Log.d("FirebaseDBPlugin","Starting authentication with token"+token);
+                if(token == null) {
+                    callbackContext.error("Empty token");
+                }
+                Log.d("FirebaseDBPlugin","Get credential");
+                AuthCredential credential = FacebookAuthProvider.getCredential(token);
+                Log.d("FirebaseDBPlugin","Got credential");
+                
+                mAuth.signInWithCredential(credential).addOnCompleteListener(
+                    new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(Task<AuthResult> task) {
+                            if (task == null || !task.isSuccessful()) {
+                                callbackContext.error(task.getException().toString());
+                            } else {
+                                callbackContext.success("");
+                            }
+                        }
+                    }
+                );   
+            }
+        });
+    }
+    
     private DatabaseReference.CompletionListener getCompletionListener(final CallbackContext callbackContext) {
         return new DatabaseReference.CompletionListener() {
             @Override
@@ -182,4 +246,7 @@ public class FirebaseDatabasePlugin extends CordovaPlugin {
       map = (Map<String,Object>) gson.fromJson(json.toString(), map.getClass());
       return map;
     }
+
+
+    
 }

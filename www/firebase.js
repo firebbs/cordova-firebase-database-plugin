@@ -31,16 +31,13 @@ exports.setValue = function(path, updates) {
   });
 };
 
-exports.getValue = function (key, namespace, success, error) {
-    var args = [key];
-    if (typeof namespace === 'string') {
-        args.push(namespace);
-    } else {
-        error = success;
-        success = namespace;
-    }
-    exec(success, error, "FirebaseDatabasePlugin", "getValue", args);
+exports.getValue = function (key) {
+    return new Promise(function(success, error) {
+        exec(success, error, "FirebaseDatabasePlugin", "getValue", [key]);
+    });
 };
+
+
 
 exports.getInfo = function (success, error) {
     exec(success, error, "FirebaseDatabasePlugin", "getInfo", []);
@@ -60,5 +57,10 @@ exports.setPersistenceEnabled = function(persistent, success, error) {
 exports.signInWithEmailAndPassword = function(email, password) {
     return new Promise(function(success, error) {
         exec(success, error, "FirebaseDatabasePlugin", "signInWithEmailAndPassword", [email, password]);
+    });
+};
+exports.signInWithFacebook = function(token) {
+    return new Promise(function(success, error) {
+        exec(success, error, "FirebaseDatabasePlugin", "signInWithFacebook", [token]);
     });
 };
