@@ -3,10 +3,6 @@ Cordova plugin for Google Firebase Realtime Database
 Based on the the [Firebase Notification / FCM plugin](https://github.com/arnesson/cordova-plugin-firebase)
 
 
-## Support
-Please file bugs in [Issues](https://github.com/hbmartin/cordova-plugin-firebase-realtime-database/issues)
-Ask for help in #cordova on the [Firebase Community Slack](https://firebase-community.appspot.com)
-
 ## Installation
 Install the by running:
 ```
